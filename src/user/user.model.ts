@@ -65,4 +65,15 @@ userSchema.post('save', async function (user, next) {
   next();
 });
 
+// query middleware of mongoose:
+userSchema.pre('find', async function (next) {
+  this.find().projection({ password: 0 });
+  next();
+});
+
+userSchema.pre('findOne', async function (next) {
+  this.find().projection({ password: 0 });
+  next();
+});
+
 export const userModel = model<TUser>('User', userSchema);

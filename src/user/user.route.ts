@@ -9,6 +9,9 @@ userRouter.post('/create-user', userController.creatUser);
 // read all users:
 userRouter.get('/', userController.getAllUser);
 
+// read a user:
+userRouter.get('/:id', userController.getAUser);
+
 // update a user:
 userRouter.patch('/:id', userController.updateAUser);
 

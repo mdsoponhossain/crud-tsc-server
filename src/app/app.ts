@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';
 import userRouter from '../user/user.route';
-const app = express();
+const app: Application = express();
 
 // middleware:
 app.use(express.json());

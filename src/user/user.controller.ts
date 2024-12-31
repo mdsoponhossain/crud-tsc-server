@@ -1,12 +1,24 @@
 // create user controller:
-
+import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import { userModel } from './user.model';
+import { userValidationSchema } from './user.joi.validation';
 
 // post a user:
 const creatUser = async (req: Request, res: Response) => {
   try {
-    const result = await new userModel(req.body).save();
+    const { error, value } = userValidationSchema.validate(req.body);
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Something wrong!',
+        error: (error as { message: string }).message,
+      });
+      return;
+    }
+
+    const result = await new userModel(value).save();
+
     res.status(200).json({
       success: true,
       message: 'All document retrieved successfully.',
@@ -40,6 +52,27 @@ const getAllUser = async (req: Request, res: Response) => {
   }
 };
 
+// get a user:
+
+const getAUser = async (req: Request, res: Response) => {
+  try {
+    const result = await userModel.findOne({
+      _id: new ObjectId(req.params.id),
+    });
+    res.status(200).json({
+      success: true,
+      message: 'A user data is retrieved successfully.',
+      data: result,
+    });
+  } catch (error) {
+    res.status(200).json({
+      success: true,
+      message: 'A user data failed to load.',
+      error: (error as { message: string }).message,
+    });
+  }
+};
+
 // update a user:
 
 const updateAUser = async (req: Request, res: Response) => {
@@ -65,8 +98,9 @@ const updateAUser = async (req: Request, res: Response) => {
 };
 
 const userController = {
-  creatUser,
   getAllUser,
+  getAUser,
+  creatUser,
   updateAUser,
 };
 
